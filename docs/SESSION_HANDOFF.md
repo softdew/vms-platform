@@ -13,6 +13,7 @@ Follow PROJECT_STRUCTURE.md STRICTLY for all paths.
 Working on: /services/camera-service/
 Creating: src/main.py, src/models.py, tests/test_camera.py"
 
+-------------------------------------------------------------------------------------------------
 # AI_INSTRUCTIONS.md
 
 ## STRICT RULES FOR AI ASSISTANT:
@@ -30,4 +31,14 @@ Creating: src/main.py, src/models.py, tests/test_camera.py"
    ❌ "Create config.yaml"
    ✅ "Create infrastructure/kubernetes/configmaps/app-config.yaml"
 
-6. **If confused about location, ASK don't ASSUME**
+-------------------------------------------------------------------------------------
+   For EVERY new session, start with:
+      
+   "Continue VMS project: https://github.com/softdew/vms-platform
+STRICT RULE: Follow docs/PROJECT_STRUCTURE.md exactly for all file paths.
+Never create directories outside this structure.
+Current task: [specify]"
+
+   
+
+7. **If confused about location, ASK don't ASSUME**
