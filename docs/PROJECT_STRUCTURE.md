@@ -1,5 +1,5 @@
 # PROJECT_STRUCTURE.md - VMS Platform
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Status:** IMMUTABLE - Any changes require version bump and approval  
 **Last Updated:** December 2024
 
@@ -9,12 +9,51 @@
 3. AI assistants MUST follow this structure exactly
 4. Changes require version bump in PROJECT_STRUCTURE_CHANGELOG.md
 
+## 📋 CHANGE LOG
+- v1.1.0: Added api-gateway as 16th service (central entry point for UI)
+- v1.0.0: Initial complete structure with 15 services
+
 ## 📁 Complete Directory Structure
 
 ```
 vms-platform/
 ├── services/                           # Microservices
-│   ├── auth-service/
+│   ├── api-gateway/                   # API Gateway - Single entry point for UI
+│   │   ├── src/
+│   │   │   ├── __init__.py
+│   │   │   ├── main.py               # FastAPI gateway app
+│   │   │   ├── routes/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── auth_routes.py    # Proxy to auth-service
+│   │   │   │   ├── camera_routes.py  # Proxy to camera-service
+│   │   │   │   ├── tenant_routes.py  # Proxy to tenant-service
+│   │   │   │   ├── event_routes.py   # Proxy to event-service
+│   │   │   │   ├── stream_routes.py  # WebSocket proxy
+│   │   │   │   └── aggregator.py     # Combine multiple service calls
+│   │   │   ├── middleware/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── authentication.py # JWT validation
+│   │   │   │   ├── rate_limiter.py   # Rate limiting
+│   │   │   │   ├── cors.py           # CORS handling
+│   │   │   │   └── circuit_breaker.py # Circuit breaker pattern
+│   │   │   ├── services/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── service_registry.py # Service discovery
+│   │   │   │   └── http_client.py    # Async HTTP client
+│   │   │   ├── config.py             # Gateway configuration
+│   │   │   └── utils.py              # Helper functions
+│   │   ├── tests/
+│   │   │   ├── __init__.py
+│   │   │   ├── test_routes.py
+│   │   │   ├── test_middleware.py
+│   │   │   └── conftest.py
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   ├── .env.example
+│   │   └── README.md
+│   │
+│   ├── auth-service/                  # Authentication & Authorization
+│   │   ├── src/
 │   │   ├── src/
 │   │   │   ├── __init__.py
 │   │   │   ├── main.py               # FastAPI app entry
@@ -33,6 +72,7 @@ vms-platform/
 │   │   ├── requirements.txt
 │   │   ├── .env.example
 │   │   └── README.md
+│   │   └── [same structure as auth-service]
 │   │
 │   ├── tenant-service/                # Customer & license management
 │   │   └── [same structure as auth-service]
