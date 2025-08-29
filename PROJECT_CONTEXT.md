@@ -591,6 +591,51 @@ DevOps happy (single entry point to monitor)
 
 ```
 vms-platform/
+├── frontend/                         # All Frontend Applications
+│   ├── web-app/                      # Main Web Application
+│   │   ├── public/
+│   │   │   ├── index.html
+│   │   │   └── favicon.ico
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   │   ├── common/          # Shared components
+│   │   │   │   ├── camera/          # Camera-related components
+│   │   │   │   ├── dashboard/       # Dashboard components
+│   │   │   │   └── events/          # Event components
+│   │   │   ├── pages/
+│   │   │   │   ├── Login.tsx
+│   │   │   │   ├── Dashboard.tsx
+│   │   │   │   ├── Cameras.tsx
+│   │   │   │   ├── LiveView.tsx
+│   │   │   │   └── Settings.tsx
+│   │   │   ├── services/            # API calls
+│   │   │   │   ├── api.ts           # API client
+│   │   │   │   ├── auth.ts
+│   │   │   │   └── websocket.ts
+│   │   │   ├── store/               # State management
+│   │   │   ├── hooks/               # Custom hooks
+│   │   │   ├── utils/               # Utilities
+│   │   │   ├── App.tsx
+│   │   │   └── index.tsx
+│   │   ├── package.json
+│   │   ├── tsconfig.json
+│   │   ├── .env.example
+│   │   └── README.md
+│   │
+│   ├── mobile-app/                    # Mobile Application
+│   │   ├── android/                  # Android specific
+│   │   ├── ios/                      # iOS specific
+│   │   ├── src/
+│   │   │   ├── screens/
+│   │   │   ├── components/
+│   │   │   ├── services/
+│   │   │   └── navigation/
+│   │   ├── package.json
+│   │   └── README.md
+│   │
+│   └── admin-portal/                  # System Admin Portal
+│       └── [similar structure to web-app]
+│
 ├── services/                           # Backend Microservices (16 services)
 │   ├── api-gateway/                   # API Gateway - Single entry point for UI
 │   │   ├── src/
@@ -752,7 +797,7 @@ vms-platform/
 │       ├── edge-config.yaml          # Edge server configuration
 │       └── models-config.yaml        # AI model configurations
 │
-├── shared/                            # Shared libraries
+├── shared/                             # Shared Libraries & Resources
 │   ├── database/
 │   │   ├── __init__.py
 │   │   ├── models/
@@ -769,8 +814,28 @@ vms-platform/
 │   │   │   ├── schemas.py           # MongoDB schemas
 │   │   │   └── connection.py        # MongoDB connection
 │   │   └── migrations/
-│   │       ├── alembic.ini
-│   │       └── versions/
+│   │       ├── sqlserver/           # SQL Server migrations
+│   │       │   ├── alembic.ini
+│   │       │   └── versions/
+│   │       └── mongodb/             # MongoDB migrations
+│   │           └── scripts/
+│   │
+│   ├── message-schemas/              # Kafka/RabbitMQ message definitions
+│   │   ├── video_job.proto          # Protobuf definitions
+│   │   ├── event.proto
+│   │   ├── notification.proto
+│   │   └── schemas.py               # Python schemas
+│   │
+│   ├── sdk/                          # Client SDKs
+│   │   ├── python-sdk/              # For edge servers
+│   │   │   ├── vms_sdk/
+│   │   │   ├── setup.py
+│   │   │   └── README.md
+│   │   ├── js-sdk/                  # For web frontend
+│   │   │   ├── src/
+│   │   │   ├── package.json
+│   │   │   └── README.md
+│   │   └── mobile-sdk/              # For mobile apps
 │   │
 │   ├── utils/
 │   │   ├── __init__.py
@@ -790,16 +855,16 @@ vms-platform/
 │   │       └── discovery.py         # Camera discovery
 │   │
 │   └── protocols/
-│       ├── __init__.py
-│       ├── onvif/
-│       │   ├── __init__.py
-│       │   ├── client.py            # ONVIF client
-│       │   └── discovery.py         # ONVIF discovery
-│       └── rtsp/
-│           ├── __init__.py
-│           └── client.py            # RTSP client
-│
-├── infrastructure/                    # Deployment & configuration
+│   │   ├── __init__.py
+│   │   ├── onvif/
+│   │   │   ├── __init__.py
+│   │   │   ├── client.py            # ONVIF client
+│   │   │   └── discovery.py         # ONVIF discovery
+│   │   └── rtsp/
+│   │       ├── __init__.py
+│   │       └── client.py            # RTSP client
+│   │
+├── infrastructure/
 │   ├── docker/
 │   │   ├── docker-compose.yml       # Full stack local dev
 │   │   ├── docker-compose.dev.yml   # Development overrides
@@ -846,19 +911,42 @@ vms-platform/
 │   │           └── [all templates]
 │   │
 │   └── terraform/
-│       ├── modules/
-│       │   ├── eks/                # EKS cluster module
-│       │   ├── rds/                # RDS module
-│       │   ├── s3/                 # S3 module
-│       │   └── vpc/                # VPC module
-│       ├── environments/
-│       │   ├── dev/
-│       │   ├── staging/
-│       │   └── prod/
-│       ├── main.tf                  # Main configuration
-│       ├── variables.tf             # Variable definitions
-│       ├── outputs.tf               # Output values
-│       └── backend.tf               # State backend config
+│   │   ├── modules/
+│   │   │   ├── eks/                # EKS cluster module
+│   │   │   ├── rds/                # RDS module
+│   │   │   ├── s3/                 # S3 module
+│   │   │   └── vpc/                # VPC module
+│   │   ├── environments/
+│   │   │   ├── dev/
+│   │   │   ├── staging/
+│   │   │   └── prod/
+│   │   ├── main.tf                  # Main configuration
+│   │   ├── variables.tf             # Variable definitions
+│   │   ├── outputs.tf               # Output values
+│   │   └── backend.tf               # State backend config
+│   │
+│   ├── ansible/                      # Edge server deployment
+│   │   ├── playbooks/
+│   │   │   ├── edge-setup.yml
+│   │   │   └── edge-update.yml
+│   │   ├── inventory/
+│   │   └── roles/
+│   │
+│   ├── load-balancer/                # HAProxy/Nginx configs
+│   │   ├── haproxy/
+│   │   │   └── haproxy.cfg
+│   │   └── nginx/
+│   │       └── nginx.conf
+│   │
+│   ├── vpn/                          # VPN configurations
+│   │   ├── wireguard/
+│   │   └── openvpn/
+│   │
+│   └── certificates/                  # SSL/TLS certificates
+│       ├── ca/                       # Certificate Authority
+│       ├── server/                   # Server certificates
+│       ├── client/                   # Client certificates
+│       └── README.md                 # Certificate management guide
 │
 ├── tests/                             # Integration & E2E tests
 │   ├── integration/
@@ -880,56 +968,123 @@ vms-platform/
 │       ├── onvif_simulator.py      # ONVIF simulator
 │       └── hikvision_simulator.py  # Hikvision simulator
 │
-├── docs/                              # Documentation
-│   ├── PROJECT_CONTEXT.md           # Complete requirements
-│   ├── PROJECT_STRUCTURE.md         # THIS FILE
-│   ├── PROJECT_STRUCTURE_CHANGELOG.md
-│   ├── API_SPECIFICATION.md         # OpenAPI specs
-│   ├── DATABASE_SCHEMA.md           # Database design
-│   ├── DEPLOYMENT_GUIDE.md          # Deployment instructions
-│   ├── DEVELOPMENT_GUIDE.md         # Dev setup guide
-│   └── architecture/
-│       ├── system_design.md
-│       ├── data_flow.md
-│       └── diagrams/
+├── data/                              # Data-related directories
+│   ├── ml-models/                   # AI model files
+│   │   ├── intrusion_detection/
+│   │   │   ├── model.pb
+│   │   │   └── config.yaml
+│   │   └── [other models]/
+│   ├── sample-videos/               # Test videos
+│   ├── test-data/                   # Test data sets
+│   └── backups/                     # Backup location (dev only)
 │
-├── scripts/                           # Utility scripts
+├── scripts/
 │   ├── setup/
-│   │   ├── setup_dev.sh            # Development setup
-│   │   ├── setup_edge.sh           # Edge server setup
-│   │   └── install_deps.sh         # Install dependencies
+│   │   ├── setup_dev.sh            # Complete dev setup
+│   │   ├── setup_edge.sh
+│   │   └── install_deps.sh
 │   ├── deployment/
-│   │   ├── deploy.sh                # Deployment script
-│   │   └── rollback.sh             # Rollback script
+│   │   ├── deploy.sh
+│   │   ├── rollback.sh
+│   │   └── health_check.sh
 │   ├── database/
-│   │   ├── init_db.py              # Initialize database
-│   │   └── seed_data.py            # Seed test data
+│   │   ├── backup.sh                # Database backup
+│   │   ├── restore.sh               # Database restore
+│   │   ├── init_db.py
+│   │   └── seed_data.py
+│   ├── monitoring/
+│   │   ├── check_services.py        # Service health check
+│   │   └── collect_metrics.py       # Metrics collection
+│   ├── security/
+│   │   ├── generate_certs.sh        # Certificate generation
+│   │   └── rotate_secrets.sh        # Secret rotation
 │   └── validation/
-│       ├── validate_structure.py    # Validate this structure
-│       └── validate_config.py       # Validate configurations
+│       ├── validate_structure.py     # Validate this structure
+│       ├── validate_config.py        # Config validation
+│       └── validate_deployment.py    # Deployment validation
 │
-├── .github/                           # GitHub specific
+├── docs/
+│   ├── api/                          # API documentation
+│   │   ├── openapi.yaml             # OpenAPI specification
+│   │   └── postman/                 # Postman collections
+│   │       └── VMS-Platform.json
+│   ├── architecture/
+│   │   ├── system_design.md
+│   │   ├── data_flow.md
+│   │   ├── security_model.md
+│   │   └── diagrams/
+│   │       ├── architecture.drawio
+│   │       └── sequence_diagrams/
+│   ├── deployment/
+│   │   ├── kubernetes_guide.md
+│   │   ├── docker_guide.md
+│   │   └── edge_deployment.md
+│   ├── development/
+│   │   ├── setup_guide.md
+│   │   ├── coding_standards.md
+│   │   └── git_workflow.md
+│   ├── operations/
+│   │   ├── runbook.md               # Operational procedures
+│   │   ├── troubleshooting.md
+│   │   └── disaster_recovery.md
+│   ├── user_manual/
+│   │   ├── admin_guide.md
+│   │   └── user_guide.md
+│   ├── PROJECT_CONTEXT.md            # Requirements & decisions
+│   ├── PROJECT_STRUCTURE.md          # THIS FILE
+│   └── PROJECT_STRUCTURE_CHANGELOG.md
+│
+├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml                   # Continuous Integration
-│   │   ├── cd.yml                   # Continuous Deployment
+│   │   ├── ci.yml                   # CI pipeline
+│   │   ├── cd.yml                   # CD pipeline
 │   │   ├── security.yml             # Security scanning
+│   │   ├── docs.yml                 # Documentation build
 │   │   └── validate-structure.yml   # Structure validation
 │   ├── ISSUE_TEMPLATE/
-│   └── PULL_REQUEST_TEMPLATE.md
+│   │   ├── bug_report.md
+│   │   ├── feature_request.md
+│   │   └── security_issue.md
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   ├── CODEOWNERS                    # Code ownership
+│   └── dependabot.yml               # Dependency updates
+│
+├── tools/                             # Development tools
+│   ├── code-generator/               # Code generation tools
+│   │   ├── generate_service.py      # Generate new service
+│   │   └── templates/
+│   ├── migration-tools/              # Data migration tools
+│   └── debugging/                    # Debug utilities
+│
+├── config/                            # Root configuration files
+│   ├── environments/
+│   │   ├── development.env
+│   │   ├── staging.env
+│   │   └── production.env
+│   └── constants.py                  # System-wide constants
 │
 ├── requirements/                      # Python dependencies
-│   ├── base.txt                     # Core dependencies
-│   ├── dev.txt                      # Development dependencies
-│   ├── test.txt                     # Testing dependencies
-│   └── prod.txt                     # Production dependencies
+│   ├── base.txt
+│   ├── dev.txt
+│   ├── test.txt
+│   └── prod.txt
+│
+├── .vscode/                          # VS Code settings
+│   ├── settings.json
+│   ├── launch.json                  # Debug configurations
+│   └── extensions.json              # Recommended extensions
 │
 ├── .gitignore
 ├── .dockerignore
-├── .env.example                      # Environment variables template
+├── .editorconfig                     # Editor configuration
+├── .env.example                      # Environment template
+├── .pre-commit-config.yaml          # Pre-commit hooks
 ├── Makefile                          # Common commands
 ├── README.md                         # Project overview
 ├── LICENSE
-└── pyproject.toml                    # Python project config
+├── pyproject.toml                    # Python project config
+├── package.json                      # Root package.json for tools
+└── docker-compose.override.yml.example
 ```
 
 ---
