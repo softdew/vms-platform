@@ -673,7 +673,6 @@ vms-platform/
 │   │
 │   ├── auth-service/                  # Authentication & Authorization
 │   │   ├── src/
-│   │   ├── src/
 │   │   │   ├── __init__.py
 │   │   │   ├── main.py               # FastAPI app entry
 │   │   │   ├── models.py             # Pydantic/SQLAlchemy models
@@ -854,7 +853,7 @@ vms-platform/
 │   │       ├── diagnostics.py       # Network diagnostics
 │   │       └── discovery.py         # Camera discovery
 │   │
-│   └── protocols/
+│   ├── protocols/
 │   │   ├── __init__.py
 │   │   ├── onvif/
 │   │   │   ├── __init__.py
