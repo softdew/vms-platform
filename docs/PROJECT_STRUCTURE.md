@@ -517,7 +517,7 @@ vms-platform/
 ## 📌 Key Files That MUST Exist
 
 ### Root Level
-- `PROJECT_CONTEXT.md` - Complete requirements (in docs/)
+- `PROJECT_CONTEXT.md` - Complete requirements (in /)
 - `PROJECT_STRUCTURE.md` - This file (in docs/)
 - `README.md` - Project overview
 - `Makefile` - Common commands
