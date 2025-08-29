@@ -554,89 +554,306 @@ GET /health/detailed # Detailed component status
 
 ```
 vms-platform/
-├── services/
-│   ├── auth-service/           # JWT auth, user management, MFA
-│   ├── tenant-service/         # Customer & license management
-│   ├── camera-service/         # Camera CRUD, discovery, PTZ control
-│   ├── edge-manager-service/   # Edge server orchestration & assignment
-│   ├── calculator-service/     # DIY cost & resource calculator
-│   ├── ingestion-service/      # Multi-source video ingestion
-│   ├── streaming-service/      # WebRTC/HLS streaming
-│   ├── ai-pipeline-service/    # Kafka consumer, AI model orchestration
-│   ├── event-service/          # Event processing & correlation
-│   ├── notification-service/   # Multi-channel alerts
-│   ├── ticketing-service/      # Ticket management & integration
-│   ├── storage-service/        # Video storage & retention
-│   ├── watchdog-service/       # Health monitoring & SLA
-│   ├── config-service/         # Centralized configuration
-│   └── sync-service/           # Edge-cloud synchronization
+├── services/                           # Microservices
+│   ├── auth-service/
+│   │   ├── src/
+│   │   │   ├── __init__.py
+│   │   │   ├── main.py               # FastAPI app entry
+│   │   │   ├── models.py             # Pydantic/SQLAlchemy models
+│   │   │   ├── schemas.py            # Request/Response schemas
+│   │   │   ├── routes.py             # API endpoints
+│   │   │   ├── dependencies.py       # Shared dependencies
+│   │   │   ├── config.py             # Service configuration
+│   │   │   └── utils.py              # Helper functions
+│   │   ├── tests/
+│   │   │   ├── __init__.py
+│   │   │   ├── test_routes.py
+│   │   │   ├── test_models.py
+│   │   │   └── conftest.py
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   ├── .env.example
+│   │   └── README.md
+│   │
+│   ├── tenant-service/                # Customer & license management
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── camera-service/                # Camera CRUD, discovery, PTZ
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── edge-manager-service/          # Edge server orchestration
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── calculator-service/            # DIY cost calculator
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── ingestion-service/             # Video stream ingestion
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── streaming-service/             # WebRTC/HLS streaming
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── ai-pipeline-service/           # AI model orchestration
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── event-service/                 # Event processing
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── notification-service/          # Multi-channel alerts
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── ticketing-service/             # Ticket management
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── storage-service/               # Video storage management
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── watchdog-service/              # Health monitoring & SLA
+│   │   └── [same structure as auth-service]
+│   │
+│   ├── config-service/                # Centralized configuration
+│   │   └── [same structure as auth-service]
+│   │
+│   └── sync-service/                  # Edge-cloud synchronization
+│       └── [same structure as auth-service]
 │
-├── shared/
-│   ├── database/
-│   │   ├── models/            # SQLAlchemy models
-│   │   ├── mongodb/           # MongoDB schemas
-│   │   └── migrations/        # Alembic migrations
-│   ├── utils/
-│   │   ├── auth/             # JWT utilities
-│   │   ├── video/            # Video processing utilities
-│   │   └── network/          # Network diagnostics
-│   └── protocols/
-│       ├── onvif/            # ONVIF implementation
-│       └── rtsp/             # RTSP client
-│
-├── edge-server/
-│   ├── agent/                # Edge-cloud communication & sync
-│   │   ├── sync_manager/     # Config & license sync
-│   │   ├── heartbeat/        # Health reporting
-│   │   └── cluster_manager/  # Peer coordination
+├── edge-server/                        # Edge server components
+│   ├── agent/
+│   │   ├── src/
+│   │   │   ├── __init__.py
+│   │   │   ├── main.py
+│   │   │   ├── sync_manager.py       # Config & license sync
+│   │   │   ├── heartbeat.py          # Health reporting
+│   │   │   └── cluster_manager.py    # Peer coordination
+│   │   ├── tests/
+│   │   └── requirements.txt
+│   │
 │   ├── ingestion/
-│   │   ├── adapters/         # Camera adapters (RTSP, ONVIF, SDK)
-│   │   ├── normalizer/       # Stream normalization (resolution, fps, codec)
-│   │   ├── segmenter/        # Stream segmentation (5s chunks with overlap)
-│   │   ├── job_maker/        # VideoJob creation and routing
-│   │   └── load_balancer/    # Distribute streams across workers
+│   │   ├── adapters/
+│   │   │   ├── __init__.py
+│   │   │   ├── base_adapter.py       # Abstract base class
+│   │   │   ├── onvif_adapter.py      # ONVIF protocol
+│   │   │   ├── rtsp_adapter.py       # RTSP streams
+│   │   │   ├── hikvision_adapter.py  # Hikvision SDK
+│   │   │   └── dahua_adapter.py      # Dahua SDK
+│   │   ├── normalizer/
+│   │   │   ├── __init__.py
+│   │   │   ├── video_normalizer.py   # Resolution/FPS normalization
+│   │   │   └── codec_converter.py    # Codec conversion
+│   │   ├── segmenter/
+│   │   │   ├── __init__.py
+│   │   │   ├── stream_segmenter.py   # 5s chunks with overlap
+│   │   │   └── segment_buffer.py     # Buffer management
+│   │   ├── job_maker/
+│   │   │   ├── __init__.py
+│   │   │   ├── job_creator.py        # VideoJob creation
+│   │   │   └── priority_router.py    # Route to correct queue
+│   │   └── load_balancer/
+│   │       ├── __init__.py
+│   │       └── stream_distributor.py # Distribute across workers
+│   │
 │   ├── ai-workers/
-│   │   ├── models/           # AI model implementations
-│   │   ├── consumers/        # Kafka consumers (priority-based)
-│   │   └── gpu_manager/      # GPU resource optimization
-│   └── storage/              # Local video buffer & event queue
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── intrusion_detection.py
+│   │   │   ├── fire_smoke_detection.py
+│   │   │   ├── anpr.py
+│   │   │   └── [other 7 models].py
+│   │   ├── consumers/
+│   │   │   ├── __init__.py
+│   │   │   ├── base_consumer.py      # Base Kafka consumer
+│   │   │   ├── priority_consumer.py  # High-priority queue
+│   │   │   └── standard_consumer.py  # Standard queue
+│   │   └── gpu_manager/
+│   │       ├── __init__.py
+│   │       ├── resource_allocator.py # GPU resource management
+│   │       └── model_cache.py        # Model caching in GPU
+│   │
+│   ├── storage/
+│   │   ├── __init__.py
+│   │   ├── video_buffer.py           # Local video buffering
+│   │   ├── event_queue.py            # Event queue for upload
+│   │   └── retention_manager.py      # Storage cleanup
+│   │
+│   └── config/
+│       ├── edge-config.yaml          # Edge server configuration
+│       └── models-config.yaml        # AI model configurations
 │
-├── infrastructure/
+├── shared/                            # Shared libraries
+│   ├── database/
+│   │   ├── __init__.py
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py              # SQLAlchemy base
+│   │   │   ├── customer.py          # Customer model
+│   │   │   ├── camera.py            # Camera model
+│   │   │   ├── user.py              # User model
+│   │   │   ├── license.py           # License model
+│   │   │   ├── edge_server.py       # Edge server model
+│   │   │   └── event.py             # Event model
+│   │   ├── mongodb/
+│   │   │   ├── __init__.py
+│   │   │   ├── schemas.py           # MongoDB schemas
+│   │   │   └── connection.py        # MongoDB connection
+│   │   └── migrations/
+│   │       ├── alembic.ini
+│   │       └── versions/
+│   │
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── auth/
+│   │   │   ├── __init__.py
+│   │   │   ├── jwt_handler.py       # JWT utilities
+│   │   │   ├── password.py          # Password hashing
+│   │   │   └── permissions.py       # RBAC utilities
+│   │   ├── video/
+│   │   │   ├── __init__.py
+│   │   │   ├── codec_utils.py       # Codec utilities
+│   │   │   ├── frame_utils.py       # Frame processing
+│   │   │   └── stream_utils.py      # Stream utilities
+│   │   └── network/
+│   │       ├── __init__.py
+│   │       ├── diagnostics.py       # Network diagnostics
+│   │       └── discovery.py         # Camera discovery
+│   │
+│   └── protocols/
+│       ├── __init__.py
+│       ├── onvif/
+│       │   ├── __init__.py
+│       │   ├── client.py            # ONVIF client
+│       │   └── discovery.py         # ONVIF discovery
+│       └── rtsp/
+│           ├── __init__.py
+│           └── client.py            # RTSP client
+│
+├── infrastructure/                    # Deployment & configuration
 │   ├── docker/
-│   │   ├── Dockerfile.service
-│   │   └── docker-compose.yml
+│   │   ├── docker-compose.yml       # Full stack local dev
+│   │   ├── docker-compose.dev.yml   # Development overrides
+│   │   ├── docker-compose.test.yml  # Testing environment
+│   │   ├── Dockerfile.base          # Base Python image
+│   │   └── .env.example             # Environment template
+│   │
 │   ├── kubernetes/
+│   │   ├── base/
+│   │   │   ├── namespace.yaml       # Namespace definition
+│   │   │   ├── rbac.yaml           # RBAC rules
+│   │   │   └── network-policy.yaml  # Network policies
+│   │   ├── configmaps/
+│   │   │   ├── app-config.yaml     # Application config
+│   │   │   ├── model-config.yaml   # AI model config
+│   │   │   └── edge-config.yaml    # Edge server config
+│   │   ├── secrets/
+│   │   │   ├── .gitkeep            # Empty file for git
+│   │   │   └── sealed-secrets.yaml  # Encrypted secrets
 │   │   ├── deployments/
+│   │   │   ├── auth-service.yaml
+│   │   │   ├── tenant-service.yaml
+│   │   │   ├── camera-service.yaml
+│   │   │   └── [other services].yaml
 │   │   ├── services/
-│   │   └── configmaps/
-│   └── terraform/            # Infrastructure as Code
+│   │   │   ├── auth-service-svc.yaml
+│   │   │   └── [other services]-svc.yaml
+│   │   ├── ingress/
+│   │   │   └── nginx-ingress.yaml
+│   │   ├── istio/
+│   │   │   ├── gateway.yaml
+│   │   │   └── virtual-service.yaml
+│   │   └── monitoring/
+│   │       ├── prometheus.yaml
+│   │       └── grafana.yaml
+│   │
+│   ├── helm/
+│   │   └── vms-platform/
+│   │       ├── Chart.yaml           # Helm chart definition
+│   │       ├── values.yaml          # Default values
+│   │       ├── values.dev.yaml      # Development values
+│   │       ├── values.prod.yaml     # Production values
+│   │       └── templates/
+│   │           └── [all templates]
+│   │
+│   └── terraform/
+│       ├── modules/
+│       │   ├── eks/                # EKS cluster module
+│       │   ├── rds/                # RDS module
+│       │   ├── s3/                 # S3 module
+│       │   └── vpc/                # VPC module
+│       ├── environments/
+│       │   ├── dev/
+│       │   ├── staging/
+│       │   └── prod/
+│       ├── main.tf                  # Main configuration
+│       ├── variables.tf             # Variable definitions
+│       ├── outputs.tf               # Output values
+│       └── backend.tf               # State backend config
 │
-├── tests/
-│   ├── unit/
+├── tests/                             # Integration & E2E tests
 │   ├── integration/
-│   └── simulators/           # ONVIF camera simulators
+│   │   ├── __init__.py
+│   │   ├── test_camera_flow.py
+│   │   ├── test_event_pipeline.py
+│   │   └── test_edge_sync.py
+│   ├── e2e/
+│   │   ├── __init__.py
+│   │   └── test_full_pipeline.py
+│   ├── load/
+│   │   ├── locustfile.py           # Load testing with Locust
+│   │   └── scenarios/
+│   └── simulators/
+│       ├── camera_simulator.py      # Camera simulator
+│       ├── onvif_simulator.py      # ONVIF simulator
+│       └── hikvision_simulator.py  # Hikvision simulator
 │
-├── docs/
-│   ├── api/                  # OpenAPI/Swagger docs
-│   ├── architecture/
-│   └── deployment/
+├── docs/                              # Documentation
+│   ├── PROJECT_CONTEXT.md           # Complete requirements
+│   ├── PROJECT_STRUCTURE.md         # THIS FILE
+│   ├── PROJECT_STRUCTURE_CHANGELOG.md
+│   ├── API_SPECIFICATION.md         # OpenAPI specs
+│   ├── DATABASE_SCHEMA.md           # Database design
+│   ├── DEPLOYMENT_GUIDE.md          # Deployment instructions
+│   ├── DEVELOPMENT_GUIDE.md         # Dev setup guide
+│   └── architecture/
+│       ├── system_design.md
+│       ├── data_flow.md
+│       └── diagrams/
 │
-├── scripts/
+├── scripts/                           # Utility scripts
 │   ├── setup/
-│   └── migration/
+│   │   ├── setup_dev.sh            # Development setup
+│   │   ├── setup_edge.sh           # Edge server setup
+│   │   └── install_deps.sh         # Install dependencies
+│   ├── deployment/
+│   │   ├── deploy.sh                # Deployment script
+│   │   └── rollback.sh             # Rollback script
+│   ├── database/
+│   │   ├── init_db.py              # Initialize database
+│   │   └── seed_data.py            # Seed test data
+│   └── validation/
+│       ├── validate_structure.py    # Validate this structure
+│       └── validate_config.py       # Validate configurations
 │
-├── requirements/
-│   ├── base.txt              # Core dependencies
-│   ├── dev.txt               # Development dependencies
-│   └── prod.txt              # Production dependencies
+├── .github/                           # GitHub specific
+│   ├── workflows/
+│   │   ├── ci.yml                   # Continuous Integration
+│   │   ├── cd.yml                   # Continuous Deployment
+│   │   ├── security.yml             # Security scanning
+│   │   └── validate-structure.yml   # Structure validation
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
 │
-├── .github/
-│   └── workflows/            # CI/CD pipelines
+├── requirements/                      # Python dependencies
+│   ├── base.txt                     # Core dependencies
+│   ├── dev.txt                      # Development dependencies
+│   ├── test.txt                     # Testing dependencies
+│   └── prod.txt                     # Production dependencies
 │
-├── PROJECT_CONTEXT.md         # This document
-├── README.md
-├── .env.example
-└── .gitignore
+├── .gitignore
+├── .dockerignore
+├── .env.example                      # Environment variables template
+├── Makefile                          # Common commands
+├── README.md                         # Project overview
+├── LICENSE
+└── pyproject.toml                    # Python project config
 ```
 
 ---
