@@ -548,6 +548,43 @@ GET /health/detailed # Detailed component status
 - IP whitelisting option
 - Encryption for sensitive data
 
+### 14. API Gateway
+
+ADD the API Gateway service to your structure. Here's why:
+
+Cleaner for UI team - One API to learn
+Better performance - Aggregation reduces latency
+Security - Single point for auth/authorization
+Flexibility - Can change backend without affecting UI
+Works everywhere - K8s, Docker, bare metal
+
+🔧 Implementation Plan:
+
+API Gateway handles:
+
+All UI requests
+Authentication/Authorization
+Request routing
+Response aggregation
+WebSocket proxying
+Rate limiting
+Circuit breaking
+
+
+Backend services:
+
+Focus on business logic
+No auth code duplication
+Service-to-service communication
+Internal APIs only
+
+
+Benefits:
+
+UI developers happy (one API)
+Backend developers happy (no cross-cutting concerns)
+DevOps happy (single entry point to monitor)
+
 ---
 
 ## 🏗️ Project Structure
@@ -555,7 +592,42 @@ GET /health/detailed # Detailed component status
 ```
 vms-platform/
 ├── services/                           # Microservices
-│   ├── auth-service/
+│   ├── api-gateway/                   # API Gateway - Single entry point for UI
+│   │   ├── src/
+│   │   │   ├── __init__.py
+│   │   │   ├── main.py               # FastAPI gateway app
+│   │   │   ├── routes/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── auth_routes.py    # Proxy to auth-service
+│   │   │   │   ├── camera_routes.py  # Proxy to camera-service
+│   │   │   │   ├── tenant_routes.py  # Proxy to tenant-service
+│   │   │   │   ├── event_routes.py   # Proxy to event-service
+│   │   │   │   ├── stream_routes.py  # WebSocket proxy
+│   │   │   │   └── aggregator.py     # Combine multiple service calls
+│   │   │   ├── middleware/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── authentication.py # JWT validation
+│   │   │   │   ├── rate_limiter.py   # Rate limiting
+│   │   │   │   ├── cors.py           # CORS handling
+│   │   │   │   └── circuit_breaker.py # Circuit breaker pattern
+│   │   │   ├── services/
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── service_registry.py # Service discovery
+│   │   │   │   └── http_client.py    # Async HTTP client
+│   │   │   ├── config.py             # Gateway configuration
+│   │   │   └── utils.py              # Helper functions
+│   │   ├── tests/
+│   │   │   ├── __init__.py
+│   │   │   ├── test_routes.py
+│   │   │   ├── test_middleware.py
+│   │   │   └── conftest.py
+│   │   ├── Dockerfile
+│   │   ├── requirements.txt
+│   │   ├── .env.example
+│   │   └── README.md
+│   │
+│   ├── auth-service/                  # Authentication & Authorization
+│   │   ├── src/
 │   │   ├── src/
 │   │   │   ├── __init__.py
 │   │   │   ├── main.py               # FastAPI app entry
@@ -574,6 +646,7 @@ vms-platform/
 │   │   ├── requirements.txt
 │   │   ├── .env.example
 │   │   └── README.md
+│   │   └── [same structure as auth-service]
 │   │
 │   ├── tenant-service/                # Customer & license management
 │   │   └── [same structure as auth-service]
