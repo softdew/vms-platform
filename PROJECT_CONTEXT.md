@@ -591,7 +591,7 @@ DevOps happy (single entry point to monitor)
 
 ```
 vms-platform/
-├── services/                           # Microservices
+├── services/                           # Backend Microservices (16 services)
 │   ├── api-gateway/                   # API Gateway - Single entry point for UI
 │   │   ├── src/
 │   │   │   ├── __init__.py
@@ -866,12 +866,15 @@ vms-platform/
 │   │   ├── test_camera_flow.py
 │   │   ├── test_event_pipeline.py
 │   │   └── test_edge_sync.py
-│   ├── e2e/
-│   │   ├── __init__.py
-│   │   └── test_full_pipeline.py
+│   ├── e2e/                         # End-to-end tests
+│   │   ├── cypress/                 # For web UI testing
+│   │   └── api/                     # API e2e tests
 │   ├── load/
 │   │   ├── locustfile.py           # Load testing with Locust
 │   │   └── scenarios/
+│   ├── security/                    # Security testing
+│   │   ├── penetration/
+│   │   └── vulnerability/
 │   └── simulators/
 │       ├── camera_simulator.py      # Camera simulator
 │       ├── onvif_simulator.py      # ONVIF simulator
