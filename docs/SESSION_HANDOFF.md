@@ -42,3 +42,10 @@ Current task: [specify]"
    
 
 7. **If confused about location, ASK don't ASSUME**
+
+-----------------------------------------------------------------
+
+"Continue VMS project: https://github.com/softdew/vms-platform
+Using PROJECT_STRUCTURE.md v1.1.0 with 16 services including api-gateway.
+Ready to implement [specify task]"
+
