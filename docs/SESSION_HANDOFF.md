@@ -49,3 +49,30 @@ Current task: [specify]"
 Using PROJECT_STRUCTURE.md v1.1.0 with 16 services including api-gateway.
 Ready to implement [specify task]"
 
+------------------------------------------------------------------------------------------------------
+
+
+I'm building a VMS (Video Management System) platform with AI analytics. 
+
+GitHub repo: https://github.com/softdew/vms-platform
+
+Here are my two core documents:
+
+[PASTE PROJECT_CONTEXT.md HERE - the complete requirements document]
+
+[PASTE PROJECT_STRUCTURE.md v2.0.0 HERE - the final directory structure]
+
+CRITICAL RULES:
+1. Follow PROJECT_STRUCTURE.md v2.0.0 EXACTLY for all file locations
+2. This structure is immutable - any deviation is a bug
+3. We have 16 backend services + frontend apps + edge server components
+
+I want to start with: [SPECIFY YOUR TASK]
+- Option A: Design complete database schema (SQL Server + MongoDB)
+- Option B: Implement api-gateway service
+- Option C: Implement camera-service
+- Option D: Create edge server ingestion pipeline
+- Option E: [Your specific choice]
+
+Please acknowledge you've understood the structure and requirements before we begin.
+
